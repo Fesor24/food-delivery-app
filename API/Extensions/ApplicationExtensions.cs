@@ -84,5 +84,23 @@ namespace API.Extensions
 
             return services;
         }
+
+        /// <summary>
+        /// Cors Extension
+        /// </summary>
+        /// <param name="services"></param>
+        /// <returns></returns>
+        public static IServiceCollection ConfigureCors(this IServiceCollection services)
+        {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy", policy =>
+                {
+                    policy.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod();
+                });
+            });
+
+            return services;
+        }
     }
 }
