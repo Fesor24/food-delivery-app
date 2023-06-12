@@ -32,9 +32,9 @@ namespace API.Controllers
         }
 
         [HttpGet(Routes.FetchRestaurants)]
-        public async Task<IReadOnlyList<RestaurantDto>> FetchRestaurants()
+        public async Task<IReadOnlyList<RestaurantDto>> FetchRestaurants([FromQuery] string sort, [FromQuery] string location)
         {
-            var spec = new RestaurantSpecification();
+            var spec = new RestaurantSpecification(sort, location);
 
             var restaurant = await _restaurantRepo.GetAllWIthSpecAsync(spec);
 
