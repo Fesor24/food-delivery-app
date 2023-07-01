@@ -1,0 +1,59 @@
+<app-navbar (eventEmit)="receiveOutputValue($event)"></app-navbar>
+
+<section class="bg-primaryYellow py-16 pt-36">
+  <div class="container mx-auto flex flex-col space-y-4 md:flex-row md:space-y-0 md:space-x-11">
+    <video autoplay loop>
+      <source src="../assets/vid.webm">
+    </video>
+
+    <div class="pt-12">
+      <h2 class="text-5xl font-extrabold text-center md:text-3xl lg:text-5xl">Food delivery and more</h2>
+      <p class="text-center py-4">Groceries, shop, pharmacy, anything</p>
+      <div class="flex flex-row h-14">
+        <div class="bg-subtleGreen p-5 text-lightGreen rounded-l-xl">
+          <i class="fa-solid fa-location-dot"></i>
+        </div>
+
+        <input placeholder="what's your address" class="py-1 px-4 w-full focus:outline-none" (click)="openAddressModal()" />
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- Address Modal -->
+<div *ngIf="showAddressModal">
+  <div class="fixed top-0 left-0 bg-slate-500 h-screen w-screen flex items-center justify-center">
+    <div class="bg-white h-4/5 w-2/3 flex flex-col space-y-6">
+      <div class="flex items-end justify-end pr-7 pt-6 cursor-pointer" (click)="closeAddressModal()"><i class="fa-solid fa-x"></i></div>
+      <h2 class="text-center font-semibold text-2xl">Add a delivery address</h2>
+      <div class="flex flex-row justify-between container mx-auto px-14">
+        <div class="flex flex-col space-y-40">
+          <div class="flex flex-row space-x-6">
+              <mat-form-field class="w-64 pt-5">
+                <mat-label>Select an address</mat-label>
+                <input matInput>
+          </mat-form-field>
+
+          <button class="btn-small h-14">Search</button>
+          </div>
+
+
+          <p> <i class="fa-solid fa-location-dot text-subtleGreen"></i> Or set your location on the map</p>
+        </div>
+
+          <img src="../assets/map.avif" />
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+<section>
+  <div class="container mx-auto py-12">
+    <h2 class="font-bold text-4xl text-center">Top restaurants and more in Glover</h2>
+  </div>
+</section>
