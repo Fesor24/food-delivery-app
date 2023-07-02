@@ -10,9 +10,9 @@
 /* body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; } */
 
 .btn{
-  @apply bg-subtleLightGreen py-3 px-8 rounded-3xl text-lightGreen font-semibold cursor-pointer hover:bg-subtleGreen transition ease-in duration-200
+  @apply bg-subtleGreen py-3 px-8 rounded-3xl text-lightGreen font-semibold cursor-pointer hover:bg-subtleGreen transition ease-in duration-200
 }
 
 .btn-small{
-  @apply bg-subtleLightGreen px-6 rounded-xl text-lightGreen font-semibold cursor-pointer hover:bg-subtleGreen transition ease-in duration-200
+  @apply bg-subtleGreen px-6 rounded-xl text-lightGreen font-semibold cursor-pointer hover:bg-subtleGreen transition ease-in duration-200
 }

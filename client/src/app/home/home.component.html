@@ -25,25 +25,25 @@
 <!-- Address Modal -->
 <div *ngIf="showAddressModal">
   <div class="fixed top-0 left-0 bg-slate-500 h-screen w-screen flex items-center justify-center">
-    <div class="bg-white h-4/5 w-2/3 flex flex-col space-y-6">
+    <div class="container mx-auto bg-white h-4/5 flex flex-col space-y-6">
       <div class="flex items-end justify-end pr-7 pt-6 cursor-pointer" (click)="closeAddressModal()"><i class="fa-solid fa-x"></i></div>
       <h2 class="text-center font-semibold text-2xl">Add a delivery address</h2>
       <div class="flex flex-row justify-between container mx-auto px-14">
-        <div class="flex flex-col space-y-40">
+        <div class="flex flex-col space-y-40 items-center justify-center">
           <div class="flex flex-row space-x-6">
               <mat-form-field class="w-64 pt-5">
                 <mat-label>Select an address</mat-label>
                 <input matInput>
           </mat-form-field>
 
-          <button class="btn-small h-14">Search</button>
+          <button class="btn-small h-14 mt-4">Search</button>
           </div>
 
 
           <p> <i class="fa-solid fa-location-dot text-subtleGreen"></i> Or set your location on the map</p>
         </div>
 
-          <img src="../assets/map.avif" />
+          <img src="../assets/map.avif" class="hidden md:block" />
       </div>
 
     </div>
@@ -51,9 +51,149 @@
 </div>
 
 
+<!-- Top Restaurants and more -->
+<section class="container mx-auto py-12 " >
 
-<section>
-  <div class="container mx-auto py-12">
-    <h2 class="font-bold text-4xl text-center">Top restaurants and more in Glover</h2>
+  <h2 class="font-bold text-4xl text-center">Top restaurants and more in Glover</h2>
+
+  <div class="grid grid-cols-3 pt-8 gap-20 md:grid-cols-4">
+      <div *ngFor="let restaurant of restaurants" >
+    <app-restaurant-circ [restaurantName]="restaurant.name" [imageUrl]="restaurant.pictureUrl">
+
+    </app-restaurant-circ>
+
   </div>
+  </div>
+
+
+
+</section>
+
+
+<!-- Anything Delivered -->
+<section class="container mx-auto py-12">
+  <h1 class="font-bold text-4xl text-center">Anything delivered</h1>
+  <div class="flex items-center justify-evenly pt-10 space-x-20">
+    <div class="flex flex-col space-y-4">
+      <div class="w-full flex items-center justify-center">
+        <img src="../../assets/top-restaurant.svg" class="h-28 w-28 md:h-32 md:w-32"/>
+      </div>
+
+      <p class="font-extrabold text-xl text-center">Your city's top restaurant</p>
+      <p class="text-center">With a great variety of restaurants you can order your favourite food or explore new restaurants nearby!</p>
+    </div>
+
+     <div class="flex flex-col space-y-4">
+      <div class="w-full flex items-center justify-center">
+        <img src="../../assets/delivery.svg" class="h-28 w-28 md:h-32 md:w-32"/>
+      </div>
+      <p class="font-bold text-xl text-center">Fast delivery</p>
+      <p class="text-center">Like a flash! Order or send anything in your city and receive it in minutes</p>
+    </div>
+
+     <div class="flex flex-col space-y-4">
+      <div class="w-full flex items-center justify-center">
+        <img src="../../assets/groceries.svg" class="h-28 w-28 md:h-32 md:w-32"/>
+      </div>
+      <p class="text-xl font-bold text-center">Groceries delivery & more</p>
+      <p class="text-center">Find anything you need! From supermarkets to shops, pharmacies to florists — if it's in your city order it and receive it.</p>
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- Countries where we deliver -->
+<section class="py-12 bg-primaryYellow">
+  <div class="container mx-auto flex flex-col space-y-8">
+    <div class="flex items-center justify-center">
+      <img src="../../assets/countries.svg" />
+    </div>
+
+    <h1 class="text-4xl font-extrabold text-center">Countries where we deliver</h1>
+
+    <div class="flex flex-col space-y-4">
+         <div class="flex space-x-2 items-center justify-center w-full flex-auto">
+      <p class="bg-yellow-100 py-2 px-8 rounded-full font-bold text-xl">Nigeria</p>
+      <p class="bg-yellow-100 py-2 px-8 rounded-full font-bold text-xl">Algeria</p>
+      <p class="bg-yellow-100 py-2 px-8 rounded-full font-bold text-xl">Brazil</p>
+      <p class="bg-yellow-100 py-2 px-8 rounded-full font-bold text-xl">USA</p>
+      <p class="bg-yellow-100 py-2 px-8 rounded-full font-bold text-xl">Iceland</p>
+      <p class="bg-yellow-100 py-2 px-8 rounded-full font-bold text-xl">Finland</p>
+
+
+    </div>
+
+    <div class="flex flex-col space-y-4">
+         <div class="flex space-x-2 items-center justify-center w-full flex-auto">
+      <p class="bg-yellow-100 py-2 px-8 rounded-full font-bold text-xl">Ghana</p>
+      <p class="bg-yellow-100 py-2 px-8 rounded-full font-bold text-xl">Togo</p>
+      <p class="bg-yellow-100 py-2 px-8 rounded-full font-bold text-xl">France</p>
+      <p class="bg-yellow-100 py-2 px-8 rounded-full font-bold text-xl">Mali</p>
+      <p class="bg-yellow-100 py-2 px-8 rounded-full font-bold text-xl">Korea</p>
+      <p class="bg-yellow-100 py-2 px-8 rounded-full font-bold text-xl">Israel</p>
+      <p class="bg-yellow-100 py-2 px-8 rounded-full font-bold text-xl">Jamaica</p>
+      <p class="bg-yellow-100 py-2 px-8 rounded-full font-bold text-xl">Columbia</p>
+
+
+    </div>
+    </div>
+
+   <div class="flex flex-col space-y-4">
+         <div class="flex space-x-2 items-center justify-center w-full flex-auto">
+      <p class="bg-yellow-100 py-2 px-8 rounded-full font-bold text-xl">Morocco</p>
+      <p class="bg-yellow-100 py-2 px-8 rounded-full font-bold text-xl">Latvia</p>
+      <p class="bg-yellow-100 py-2 px-8 rounded-full font-bold text-xl">Austria</p>
+      <p class="bg-yellow-100 py-2 px-8 rounded-full font-bold text-xl">India</p>
+      <p class="bg-yellow-100 py-2 px-8 rounded-full font-bold text-xl">Poland</p>
+      <p class="bg-yellow-100 py-2 px-8 rounded-full font-bold text-xl">China</p>
+
+
+
+    </div>
+   </div>
+
+    <div class="flex flex-col space-y-4">
+         <div class="flex space-x-2 items-center justify-center w-full flex-auto">
+      <p class="bg-yellow-200 py-2 px-8 rounded-full font-bold text-xl">Chad</p>
+      <p class="bg-yellow-200 py-2 px-8 rounded-full font-bold text-xl">South Africa</p>
+      <p class="bg-yellow-200 py-2 px-8 rounded-full font-bold text-xl">Egypt</p>
+      <p class="bg-yellow-200 py-2 px-8 rounded-full font-bold text-xl">UK</p>
+      <p class="bg-yellow-200 py-2 px-8 rounded-full font-bold text-xl">Canada</p>
+
+
+    </div>
+
+    </div>
+
+    </div>
+
+
+
+  </div>
+</section>
+
+
+<!-- Download the app -->
+<section>
+<div class="flex">
+  <div class="flex flex-col w-1/2 space-y-8 items-center justify-center">
+    <div class="flex items-center justify-center">
+      <img src="https://res.cloudinary.com/glovoapp/image/fetch/q_30,f_auto,c_lpad,dpr_1.0,h_122,w_105,b_transparent/https://glovoapp.com/images/landing/download-app-logo.svg" />
+    </div>
+    <h1 class="text-4xl font-extrabold text-center">Download the app</h1>
+    <p class="text-center">Order anything and track it in real time with the Glovo app.</p>
+
+    <div class="flex space-x-6 pt-10">
+      <img src="https://res.cloudinary.com/glovoapp/image/fetch/f_svg,c_lpad,q_auto:low,h_40,w_134,b_transparent/https://glovoapp.com/images/google_play/google-play-button.svg" />
+      <img src="https://res.cloudinary.com/glovoapp/image/fetch/f_svg,c_lpad,q_auto:low,h_40,w_134,b_transparent/https://glovoapp.com/images/google_play/google-play-button.svg" />
+    </div>
+
+  </div>
+  <div class="h-full w-1/2">
+    <img src="../../assets/download-app-desktop.avif" />
+  </div>
+
+</div>
 </section>

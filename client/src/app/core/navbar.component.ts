@@ -1,12 +1,21 @@
-import { Component, EventEmitter, HostListener, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css'],
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
+
+  constructor(){}
+
+  ngOnInit(): void {
+    this.screenWidth = window.innerWidth;
+    window.addEventListener('resize', this.onWindowResize.bind(this))
+  }
   hasScrolledPastPoint = false;
+
+  screenWidth?: number;
 
   @Output() showAddressModal = false;
 
@@ -14,7 +23,7 @@ export class NavbarComponent {
 
   @HostListener('window:scroll', [])
   onWindowScroll() {
-    const desiredPoint = 450;
+    const desiredPoint =  this.screenWidth! < 764 ? 685 : 250;
     const scrollPosition =
       window.pageYOffset ||
       document.documentElement.scrollTop ||
@@ -26,5 +35,9 @@ export class NavbarComponent {
 
   openAddressModal() {
     this.eventEmit.emit(true);
+  }
+
+  onWindowResize(event: Event) {
+    this.screenWidth = window.innerWidth;
   }
 }
