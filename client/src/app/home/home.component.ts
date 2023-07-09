@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { IRestaurant } from '../shared/models/restaurant';
 import { HomeService } from './home.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -10,12 +11,21 @@ import { HomeService } from './home.service';
 export class HomeComponent implements OnInit {
   showAddressModal = false;
 
+
+  location: string = '';
+
   restaurants: IRestaurant[] = [];
 
-  constructor(private homeService: HomeService) {}
+  constructor(private homeService: HomeService, private router: Router,
+    private route: ActivatedRoute) {}
 
   ngOnInit(): void {
     this.fetchRestaurants();
+  }
+
+  getAddressValue(){
+    console.log("this is location", this.location);
+    this.router.navigate(['/restaurant', this.location]);
   }
 
   fetchRestaurants(){
@@ -27,7 +37,7 @@ export class HomeComponent implements OnInit {
      else{
       console.log(res.errorMessage)
      }
-    })
+    }, error => console.log(error));
 
   }
 

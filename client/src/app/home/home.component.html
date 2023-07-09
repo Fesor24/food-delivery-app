@@ -6,7 +6,7 @@
       <source src="../assets/vid.webm">
     </video>
 
-    <div class="pt-12">
+    <div class="pt-20">
       <h2 class="text-5xl font-extrabold text-center md:text-3xl lg:text-5xl">Food delivery and more</h2>
       <p class="text-center py-4">Groceries, shop, pharmacy, anything</p>
       <div class="flex flex-row h-14">
@@ -14,7 +14,7 @@
           <i class="fa-solid fa-location-dot"></i>
         </div>
 
-        <input placeholder="what's your address" class="py-1 px-4 w-full focus:outline-none" (click)="openAddressModal()" />
+        <input placeholder="what's your address" class="py-1 px-4 w-full rounded-r-md focus:outline-none" (click)="openAddressModal()" />
       </div>
 
     </div>
@@ -32,11 +32,11 @@
         <div class="flex flex-col space-y-40 items-center justify-center">
           <div class="flex flex-row space-x-6">
               <mat-form-field class="w-64 pt-5">
-                <mat-label>Select an address</mat-label>
-                <input matInput>
+                <mat-label>Location</mat-label>
+                <input matInput placeholder="Select delivery location" [(ngModel)] = "location">
           </mat-form-field>
 
-          <button class="btn-small h-14 mt-4">Search</button>
+          <button class="btn-small h-14 mt-4" (click)="getAddressValue()">Search</button>
           </div>
 
 

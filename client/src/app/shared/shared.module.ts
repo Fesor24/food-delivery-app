@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RestaurantCircComponent } from './restaurant-circ.component';
+import { RestaurantCircComponent } from './components/restaurant-circ/restaurant-circ.component';
+
 
 
 
