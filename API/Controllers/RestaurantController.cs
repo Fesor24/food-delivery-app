@@ -1,5 +1,6 @@
 ﻿using API.Dtos;
 using API.Helpers;
+using API.Response;
 using AutoMapper;
 using Core.Entities;
 using Core.Interfaces;
@@ -32,13 +33,18 @@ namespace API.Controllers
         }
 
         [HttpGet(Routes.FetchRestaurants)]
-        public async Task<IReadOnlyList<RestaurantDto>> FetchRestaurants([FromQuery] string sort, [FromQuery] string location)
+        public async Task<ApiResponse> FetchRestaurants([FromQuery] string sort, [FromQuery] string location)
         {
             var spec = new RestaurantSpecification(sort, location);
 
             var restaurant = await _restaurantRepo.GetAllWIthSpecAsync(spec);
 
-            return _mapper.Map<IReadOnlyList<Restaurant>, IReadOnlyList<RestaurantDto>>(restaurant);
+            var restaurantToReturn = _mapper.Map<IReadOnlyList<Restaurant>, IReadOnlyList<RestaurantDto>>(restaurant);
+
+            return new ApiResponse
+            {
+                Result = restaurantToReturn
+            };
         }
     }
 }

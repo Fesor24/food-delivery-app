@@ -9,6 +9,10 @@
         public string Address { get; set; }
 
         public float DeliveryFee { get; set; }
+
+        public float Ratings { get; set; }
+
+        public int Reviews { get; set; }
         
         public List<Products> Products { get; set; }
     }

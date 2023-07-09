@@ -1,8 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace Core.Entities
+﻿namespace API.Dtos
 {
-    public class Products : BaseEntity
+    public class CreateProductDto
     {
         public string Name { get; set; }
 
@@ -13,8 +11,5 @@ namespace Core.Entities
         public string PictureUrl { get; set; }
 
         public string RestaurantId { get; set; }
-
-        [ForeignKey(nameof(RestaurantId))]
-        public Restaurant Restaurant { get; set; }
     }
 }

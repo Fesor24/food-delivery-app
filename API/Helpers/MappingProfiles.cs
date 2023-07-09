@@ -11,6 +11,13 @@ namespace API.Helpers
             CreateMap<Restaurant, RestaurantDto>()
                 .ForMember(x => x.PictureUrl, o => o.MapFrom<RestaurantImageResolver>())
                 .ReverseMap();
+
+            CreateMap<Products, ProductDto>()
+                .ForMember(x => x.PictureUrl, o => o.MapFrom<ProductImageResolver>())
+                .ReverseMap();
+
+            CreateMap<Products, CreateProductDto>()
+                .ReverseMap();
         }
     }
 }
