@@ -7,6 +7,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { RestaurantNavComponent } from './restaurant-nav/restaurant-nav.component';
 import { DeliveryItemsComponent } from './delivery-items/delivery-items.component';
 import { RestaurantRecComponent } from './restaurant-rec/restaurant-rec.component';
+import { FoodItemComponent } from './food-item/food-item.component';
 
 
 
@@ -17,6 +18,7 @@ import { RestaurantRecComponent } from './restaurant-rec/restaurant-rec.componen
     RestaurantNavComponent,
     DeliveryItemsComponent,
     RestaurantRecComponent,
+    FoodItemComponent,
   ],
   imports: [
     CommonModule,

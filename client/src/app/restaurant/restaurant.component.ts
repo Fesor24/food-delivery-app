@@ -16,9 +16,13 @@ export class RestaurantComponent implements OnInit{
 
   constructor(private activatedRoute: ActivatedRoute, private restaurantService: RestaurantService){}
 
+
+
   ngOnInit(): void {
     this.getRestaurantsByLocation();
   }
+
+
 
   getRestaurantsByLocation(){
     let location = this.activatedRoute.snapshot.paramMap.get('location');
@@ -35,7 +39,7 @@ export class RestaurantComponent implements OnInit{
         else{
           console.log(res.errorMessage);
         }
-      })
+      }, error => console.log(error));
     }
   }
 
