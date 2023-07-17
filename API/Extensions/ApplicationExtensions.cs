@@ -5,6 +5,7 @@ using Infrastructure.Data;
 using Infrastructure.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using StackExchange.Redis;
 
 namespace API.Extensions
 {
@@ -99,6 +100,25 @@ namespace API.Extensions
                     policy.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod();
                 });
             });
+
+            return services;
+        }
+
+        public static IServiceCollection ConfigureRedis(this IServiceCollection services, IConfiguration config)
+        {
+            services.AddSingleton<IConnectionMultiplexer>(c =>
+            {
+                var configuration = ConfigurationOptions.Parse(config.GetConnectionString("Redis"));
+
+                return ConnectionMultiplexer.Connect(configuration);
+            });
+
+            return services;
+        }
+
+        public static IServiceCollection AddShoppingCartRepository(this IServiceCollection services)
+        {
+            services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
 
             return services;
         }

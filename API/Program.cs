@@ -8,9 +8,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 builder.Services.AddDbContext(builder.Configuration)
+    .ConfigureRedis(builder.Configuration)
     .AddGenericRepository()
     .ConfigureAutoMapper()
-    .ConfigureCors();
+    .ConfigureCors()
+    .AddShoppingCartRepository();
+
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
