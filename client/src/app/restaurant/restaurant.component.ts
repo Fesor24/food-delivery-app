@@ -27,10 +27,11 @@ export class RestaurantComponent implements OnInit{
   getRestaurantsByLocation(){
     let location = this.activatedRoute.snapshot.paramMap.get('location');
 
-    console.log("this is location", location);
+
 
     if(location){
       this.location  = location
+      localStorage.setItem('location', location);
       this.restaurantService.getRestaurantByLocation(location).subscribe(res => {
         if(res.successful){
           console.log(res.result);

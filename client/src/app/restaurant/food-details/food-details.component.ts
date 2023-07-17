@@ -18,8 +18,15 @@ export class FoodDetailsComponent implements OnInit {
 
   products: IProducts[] = [];
 
+  location!: string;
+
   ngOnInit(): void {
     this.getProductsByRestaurantId();
+    let deliveryLocation = localStorage.getItem('location');
+
+    console.log(deliveryLocation, "delivery location");
+
+    deliveryLocation ? this.location = deliveryLocation : this.location =  "Order now";
   }
 
   @HostListener('window:scroll', [])
