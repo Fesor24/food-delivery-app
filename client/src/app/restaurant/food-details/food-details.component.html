@@ -17,7 +17,7 @@
     <div class="w-full absolute top-0 left-0">
       <div class="flex items-center justify-between px-12 text-white pt-10">
         <h2 class="text-3xl font-bold cursor-pointer" routerLink="/">Glover</h2>
-        <p class="text-sm">{{location}}</p>
+        <p class="text-sm">{{ location }}</p>
       </div>
       <!-- right-4 -->
       <div class="w-full flex absolute top-56 left-0 px-16 z-20 space-x-2">
@@ -25,22 +25,22 @@
           <div class="h-[13rem] shadow-lg backdrop-blur-sm px-8">
             <div class="flex flex-col space-y-4">
               <h2 class="text-3xl font-bold pt-12">Chicken Republic</h2>
-              <input class="rounded-lg border-black border-2 px-8 py-3 outline-green-300" placeholder="Search food by name"/>
+              <input
+                class="rounded-lg border-black border-2 px-8 py-3 outline-green-300"
+                placeholder="Search food by name"
+              />
             </div>
-
           </div>
 
           <div class="shadow-lg backdrop-blur-sm relative">
             <h2 class="font-extrabold px-8 pt-12 text-lg">Foods available</h2>
             <ng-container *ngIf="products && products.length > 0">
               <div class="grid grid-cols-2 py-10 px-8 gap-x-3 gap-y-4">
-              <ng-container *ngFor="let product of products">
-                <app-food-item [food] = 'product'></app-food-item>
-              </ng-container>
-
-            </div>
+                <ng-container *ngFor="let product of products">
+                  <app-food-item [food]="product"></app-food-item>
+                </ng-container>
+              </div>
             </ng-container>
-
           </div>
         </div>
 
@@ -48,10 +48,54 @@
           class="bg-white z-20 shadow-md h-[30rem] w-1/3 right-4 bottom-[5rem]"
           [class.fixed]="scrolledPastPoint"
         >
-          <div class="flex flex-col px-4 pt-8 items-center justify-center space-y-12 w-full relative">
-            <h2 class="font-extrabold text-lg">Your glovo</h2>
-            <img src="../../../assets/astronaut.svg" class="h-[16rem] w-full" />
-            <p class="text-align">When you add items to your cart, it will appear here</p>
+          <div
+            class="flex px-4 pt-3 items-center justify-center space-y-12 w-full relative h-full"
+          >
+            <div class="absolute top-0 left-0 h-full w-full py-12">
+              <h2 class="font-extrabold text-xl text-center">Your glovo</h2>
+
+              <ng-container *ngIf="(cart$ | async) === null; else cartHasItem">
+                <div class="relative flex flex-col items-center justify-center space-y-5 px-3 h-full w-full">
+                   <img
+                  src="../../../assets/astronaut.svg"
+                  class="h-[16rem] w-full"
+                />
+                <p class="text-align">
+                  When you add items to your cart, it will appear here
+                </p>
+                </div>
+
+              </ng-container>
+
+              <ng-template #cartHasItem>
+                <ng-container *ngIf="(cart$ | async) as cart">
+                    <div
+                  class="flex flex-col items-center justify-between pt-10 h-full w-full relative"
+                >
+                  <div class="overflow-y-auto flex flex-col w-full items-center h-[16rem] px-8 space-y-6">
+
+                      <ng-container *ngFor="let cart of cart.items">
+                        <app-cart-item class="w-full" [cartItem]="cart"></app-cart-item>
+                      </ng-container>
+
+
+                  </div>
+
+                  <ng-container *ngIf="shoppingCartTotals$ | async as cartTotals">
+                          <button
+                    class="bg-subtleGreen text-white font-bold px-16 py-2 rounded-2xl hover:bg-subtleLightGreen transition ease-in duration-200"
+                    routerLink="/checkout"
+                  >
+                    Order {{cartTotals.quantity}} for NGN{{cartTotals.total}}
+                  </button>
+                  </ng-container>
+
+
+                </div>
+                </ng-container>
+
+              </ng-template>
+            </div>
           </div>
         </div>
       </div>

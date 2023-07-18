@@ -2,6 +2,8 @@ import { Component, OnInit, HostListener } from '@angular/core';
 import { RestaurantService } from '../restaurant.service';
 import { ActivatedRoute } from '@angular/router';
 import { IProducts } from 'src/app/shared/models/product';
+import { IShoppingCart, IShoppingCartItem, IShoppingCartTotals } from 'src/app/shared/models/shoppingCart';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-food-details',
@@ -20,21 +22,32 @@ export class FoodDetailsComponent implements OnInit {
 
   location!: string;
 
+  cart$!: Observable<IShoppingCart | null>;
+
+  shoppingCartTotals$!: Observable<IShoppingCartTotals>;
+
   ngOnInit(): void {
     this.getProductsByRestaurantId();
     let deliveryLocation = localStorage.getItem('location');
 
-    console.log(deliveryLocation, "delivery location");
+    console.log(deliveryLocation, 'delivery location');
 
-    deliveryLocation ? this.location = deliveryLocation : this.location =  "Order now";
+    deliveryLocation
+      ? (this.location = deliveryLocation)
+      : (this.location = 'Order now');
+
+    this.cart$ = this.restaurantService.shoppingCart$;
+
+    this.shoppingCartTotals$ = this.restaurantService.shoppingCartTotal$
+
+    console.log(this.cart$);
   }
 
   @HostListener('window:scroll', [])
   onWindowScroll() {
     const desiredPoint = 300;
 
-    const scrollPosition =
-      document.documentElement.scrollTop;
+    const scrollPosition = document.documentElement.scrollTop;
 
     this.scrolledPastPoint = scrollPosition > desiredPoint;
   }
@@ -56,4 +69,6 @@ export class FoodDetailsComponent implements OnInit {
         });
     }
   }
+
+
 }

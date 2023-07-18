@@ -8,6 +8,8 @@ import { RestaurantNavComponent } from './restaurant-nav/restaurant-nav.componen
 import { DeliveryItemsComponent } from './delivery-items/delivery-items.component';
 import { RestaurantRecComponent } from './restaurant-rec/restaurant-rec.component';
 import { FoodItemComponent } from './food-item/food-item.component';
+import { CartItemComponent } from './cart-item/cart-item.component';
+
 
 
 
@@ -19,6 +21,7 @@ import { FoodItemComponent } from './food-item/food-item.component';
     DeliveryItemsComponent,
     RestaurantRecComponent,
     FoodItemComponent,
+    CartItemComponent,
   ],
   imports: [
     CommonModule,

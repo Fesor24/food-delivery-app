@@ -1,0 +1,21 @@
+<div class="px-3 flex flex-col items-center justify-between w-full">
+  <div class="flex items-center justify-between w-full space-x-3">
+    <p class="font-extrabold">{{cartItem.quantity}}x</p>
+    <p class="text-sm font-bold">{{cartItem.name}}</p>
+    <p>{{cartItem.price | currency: '₦'}}</p>
+  </div>
+
+  <div class="flex items-center justify-between w-full">
+    <p class="text-lg font-extrabold h-7 w-7 rounded-full bg-green-200 text-green-400 flex items-center justify-center cursor-pointer"
+    (click)="decrementCartItemQuantity()"
+    >
+      <i class="fa-solid fa-minus"></i>
+    </p>
+    <p class="text-lg font-extrabold h-7 w-7 rounded-full bg-green-200 text-green-400 flex items-center justify-center cursor-pointer"
+    (click)="incrementCartItemQuantity()"
+    >
+      <i class="fa-solid fa-plus"></i>
+    </p>
+  </div>
+
+</div>
