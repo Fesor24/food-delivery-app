@@ -8,8 +8,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 builder.Services.AddDbContext(builder.Configuration)
+    .ConfigureIdentityDbContext()
     .ConfigureRedis(builder.Configuration)
+    .AddTokenService()
     .AddGenericRepository()
+    .ConfigureAuthentication(builder.Configuration)
     .ConfigureAutoMapper()
     .ConfigureCors()
     .AddShoppingCartRepository();
@@ -36,6 +39,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseCors("CorsPolicy");
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

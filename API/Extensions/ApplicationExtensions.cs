@@ -1,11 +1,18 @@
 ﻿using API.Helpers;
 using API.Response;
+using Core.Entities.Identity;
 using Core.Interfaces;
 using Infrastructure.Data;
+using Infrastructure.Identity;
 using Infrastructure.Repository;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Infrastructure.Services;
 
 namespace API.Extensions
 {
@@ -24,7 +31,11 @@ namespace API.Extensions
                 {
                     var context = services.GetRequiredService<ApplicationDbContext>();
 
+                    var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+
                     await context.Database.MigrateAsync();
+
+                    await AppIdentityDbSeed.SeedUser(userManager);
                 }
                 catch(Exception ex)
                 {
@@ -50,6 +61,49 @@ namespace API.Extensions
 
             return services;
         
+        }
+
+        public static IServiceCollection ConfigureAuthentication(this IServiceCollection services, IConfiguration config)
+        {
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidIssuer = config["Jwt:Issuer"],
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Jwt:Key"])),
+                        ValidateAudience = false
+                    };
+                });
+
+            return services;
+        }
+
+        public static IServiceCollection AddTokenService(this IServiceCollection services)
+        {
+            services.AddScoped<ITokenService, TokenService>();
+
+            return services;
+        }
+
+        public static IServiceCollection ConfigureIdentityDbContext(this IServiceCollection services)
+        {
+            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireDigit = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
+            }).AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultTokenProviders();
+
+            return services;
         }
 
         public static IServiceCollection ConfigureApiBehavior(this IServiceCollection services)

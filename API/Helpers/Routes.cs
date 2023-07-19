@@ -15,5 +15,13 @@
         public const string UpdateShoppingCart = "api/shopping-cart";
 
         public const string DeleteShoppingCart = "api/shopping-cart";
+
+        public const string Login = "api/login";
+
+        public const string Register = "api/register";
+
+        public const string GetCurrentUser = "api/user";
+
+        public const string EmailExists = "api/email-exists";
     }
 }
