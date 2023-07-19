@@ -74,6 +74,16 @@ namespace API.Controllers
         [HttpPost(Routes.Register)]
         public async Task<ApiResponse> Register([FromBody] RegisterDto registerDto)
         {
+            if(await userManager.Users.AnyAsync(x => x.Email == registerDto.Email))
+            {
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+
+                return new ApiResponse
+                {
+                    ErrorMessage = "Email in use"
+                };
+            }
+
             ApplicationUser user = new ApplicationUser
             {
                 Email = registerDto.Email,

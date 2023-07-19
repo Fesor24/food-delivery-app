@@ -18,6 +18,10 @@ namespace API.Helpers
 
             CreateMap<Products, CreateProductDto>()
                 .ReverseMap();
+
+            CreateMap<ShoppingCartItemDto, ShoppingCartItem>();
+
+            CreateMap<ShoppingCartDto, ShoppingCart>();
         }
     }
 }

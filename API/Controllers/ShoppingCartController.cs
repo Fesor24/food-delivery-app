@@ -1,5 +1,7 @@
-﻿using API.Helpers;
+﻿using API.Dtos;
+using API.Helpers;
 using API.Response;
+using AutoMapper;
 using Core.Entities;
 using Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -11,9 +13,12 @@ namespace API.Controllers
     {
         private readonly IShoppingCartRepository _shoppingCartRepo;
 
-        public ShoppingCartController(IShoppingCartRepository shoppingCartRepo)
+        private readonly IMapper _mapper;
+
+        public ShoppingCartController(IShoppingCartRepository shoppingCartRepo, IMapper mapper)
         {
             _shoppingCartRepo= shoppingCartRepo;
+            _mapper = mapper;
         }
 
         [HttpGet(Routes.GetShoppingCart)]
@@ -28,9 +33,11 @@ namespace API.Controllers
         }
 
         [HttpPost(Routes.UpdateShoppingCart)]
-        public async Task<ApiResponse> UpdateShoppingCart([FromBody] ShoppingCart shoppingCart)
+        public async Task<ApiResponse> UpdateShoppingCart([FromBody] ShoppingCartDto shoppingCart)
         {
-            var cart = await _shoppingCartRepo.UpdateShoppingCartAsync(shoppingCart);
+            var cartEntity = _mapper.Map<ShoppingCartDto, ShoppingCart>(shoppingCart);
+
+            var cart = await _shoppingCartRepo.UpdateShoppingCartAsync(cartEntity);
 
             return new ApiResponse
             {
