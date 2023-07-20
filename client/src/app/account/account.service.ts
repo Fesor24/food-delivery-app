@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../environments/environment';
 import { IUser } from '../shared/models/user';
@@ -36,6 +36,19 @@ export class AccountService {
           localStorage.setItem('token', response.result.token);
           this.userSource.next(response.result);
         }
+      })
+    )
+  }
+
+  loadCurrentUser(token: string){
+    let headers = new HttpHeaders;
+
+    headers = headers.set('Authorization', `Bearer ${token}`);
+
+    return this.http.get<IApiResponse<IUser, object, object>>(this.baseUrl + 'user', {headers}).pipe(
+      map((response: IApiResponse<IUser, object, object>) => {
+        localStorage.setItem('token', response.result.token);
+        this.userSource.next(response.result);
       })
     )
   }

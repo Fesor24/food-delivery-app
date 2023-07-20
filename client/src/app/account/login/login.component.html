@@ -24,15 +24,20 @@
 
       </div>
 
-      <div class="flex flex-col items-center justify-center space-y-6">
-        <input class="border-t-0 w-[25rem] h-8 border-b-2 border-gray-500 focus:outline-none" placeholder="Email" type="text" />
-        <input class="border-t-0 w-[25rem] h-8 border-b-2 border-gray-500 focus:outline-none" placeholder="Password" type="password" />
+     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+         <div class="flex flex-col items-center justify-center space-y-6">
+        <input class="border-t-0 w-[25rem] h-8 border-b-2 border-gray-500 focus:outline-none"
+        placeholder="Email" type="text" formControlName="email" />
+        <input class="border-t-0 w-[25rem] h-8 border-b-2 border-gray-500 focus:outline-none"
+        placeholder="Password" type="password" formControlName="password" />
       </div>
-      <p class="text-end text-subtleGreen pr-[5rem]">Forgot your password?</p>
 
-      <div class="flex items-center justify-center">
-        <button class="bg-gray-500 text-white font-extrabold text-xl px-6 py-3 w-[18rem] rounded-3xl shadow-md shadow-gray-800">Login with email</button>
+
+      <div class="flex items-center justify-center pt-10">
+        <button
+        class="bg-gray-500 text-white font-extrabold text-xl px-6 py-3 w-[18rem] rounded-3xl shadow-md shadow-gray-800">Sign up with email</button>
       </div>
+      </form>
 
 
 

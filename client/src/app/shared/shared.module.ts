@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RestaurantCircComponent } from './components/restaurant-circ/restaurant-circ.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 
@@ -10,10 +11,12 @@ import { RestaurantCircComponent } from './components/restaurant-circ/restaurant
     RestaurantCircComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    ReactiveFormsModule
   ],
   exports : [
-    RestaurantCircComponent
+    RestaurantCircComponent,
+    ReactiveFormsModule
   ]
 })
 export class SharedModule { }
