@@ -1,0 +1,12 @@
+ <input
+ class="border-t-0 w-[25rem] h-8 border-b-2 border-gray-500 focus:outline-none"
+placeholder={{label}}
+[type]="type"
+(input)="onChange($any($event.target).value)"
+#input
+(blur)="onTouched()"
+/>
+<div *ngIf="(controlDir && controlDir.control && controlDir.control.touched && !controlDir.control.valid)">
+  <span *ngIf="controlDir.control.errors?.['required']" class="text-red-600 text-sm font-bold">{{label}} is required</span>
+  <span *ngIf="controlDir.control.errors?.['pattern']" class="text-red-600 text-sm font-bold">Invalid email address</span>
+</div>
