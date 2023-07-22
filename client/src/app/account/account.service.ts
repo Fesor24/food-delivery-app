@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../environments/environment';
 import { IUser } from '../shared/models/user';
 import { IApiResponse } from '../shared/models/apiResponse';
-import { BehaviorSubject, map } from 'rxjs';
+import { BehaviorSubject, Observable, ReplaySubject, map, of } from 'rxjs';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -13,7 +13,7 @@ export class AccountService {
 
   baseUrl = environment.apiUrl
 
-  private userSource: BehaviorSubject<IUser | null> = new BehaviorSubject<IUser | null>(null);
+  private userSource: ReplaySubject<IUser | null> = new ReplaySubject<IUser | null>(1);
 
   user$ = this.userSource.asObservable();
 
@@ -47,7 +47,13 @@ export class AccountService {
     this.router.navigateByUrl('/');
   }
 
-  loadCurrentUser(token: string){
+  loadCurrentUser(token: string | null){
+
+    if(token === null){
+      this.userSource.next(null);
+      return of();
+    }
+
     let headers = new HttpHeaders;
 
     headers = headers.set('Authorization', `Bearer ${token}`);

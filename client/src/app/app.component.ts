@@ -36,10 +36,8 @@ export class AppComponent implements OnInit {
   loadCurrentUser() {
     const token = localStorage.getItem('token');
 
-    if (token) {
-      this.accountService.loadCurrentUser(token).subscribe((response) => {
-        console.log('User login persisted');
-      });
-    }
+    this.accountService.loadCurrentUser(token).subscribe((response) => {
+      console.log('User login persisted');
+    });
   }
 }
