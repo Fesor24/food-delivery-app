@@ -1,0 +1,17 @@
+﻿using Core.Entities.OrderAggregate;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace Infrastructure.Data.Config
+{
+    public class OrderItemConfig : IEntityTypeConfiguration<OrderItem>
+    {
+        public void Configure(EntityTypeBuilder<OrderItem> builder)
+        {
+            builder.OwnsOne(i => i.ItemOrdered, io => 
+            {
+                io.WithOwner();
+            });
+        }
+    }
+}
