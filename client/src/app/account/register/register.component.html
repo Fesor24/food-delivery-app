@@ -26,16 +26,21 @@
 
       <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
          <div class="flex flex-col items-center justify-center space-y-6">
-        <input class="border-t-0 w-[25rem] h-8 border-b-2 border-gray-500 focus:outline-none"
-        placeholder="Email" type="text" formControlName="email" />
-        <input class="border-t-0 w-[25rem] h-8 border-b-2 border-gray-500 focus:outline-none"
-        placeholder="Password" type="password" formControlName="password" />
+
+
+        <app-text-input formControlName="email" [label]="'Email Address'"></app-text-input>
+
+        <app-text-input formControlName="password" [label]="'Password'" [type]="'password'"></app-text-input>
+
+
       </div>
 
 
       <div class="flex items-center justify-center pt-10">
         <button
-        class="bg-gray-500 text-white font-extrabold text-xl px-6 py-3 w-[18rem] rounded-3xl shadow-md shadow-gray-800">Sign up with email</button>
+        class="bg-gray-500 text-white font-extrabold text-xl px-6 py-3 w-[18rem] rounded-3xl shadow-md shadow-gray-800"
+        [disabled]="registerForm.invalid"
+        >Sign up with email</button>
       </div>
       </form>
 

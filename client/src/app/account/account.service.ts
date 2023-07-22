@@ -4,6 +4,7 @@ import { environment } from '../environments/environment';
 import { IUser } from '../shared/models/user';
 import { IApiResponse } from '../shared/models/apiResponse';
 import { BehaviorSubject, map } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,7 @@ export class AccountService {
 
   user$ = this.userSource.asObservable();
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router) { }
 
   login(data: any){
     return this.http.post<IApiResponse<IUser, object, object>>(this.baseUrl + "login", data).pipe(
@@ -38,6 +39,12 @@ export class AccountService {
         }
       })
     )
+  }
+
+  logout(){
+    this.userSource.next(null);
+    localStorage.removeItem('token');
+    this.router.navigateByUrl('/');
   }
 
   loadCurrentUser(token: string){

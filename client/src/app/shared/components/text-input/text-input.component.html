@@ -6,7 +6,16 @@ placeholder={{label}}
 #input
 (blur)="onTouched()"
 />
+
+<div *ngIf="(controlDir && controlDir.control && controlDir.control.status === 'PENDING')" class="fa fa-spinner fa-spin text-subtleGreen">
+
+</div>
+
 <div *ngIf="(controlDir && controlDir.control && controlDir.control.touched && !controlDir.control.valid)">
   <span *ngIf="controlDir.control.errors?.['required']" class="text-red-600 text-sm font-bold">{{label}} is required</span>
   <span *ngIf="controlDir.control.errors?.['pattern']" class="text-red-600 text-sm font-bold">Invalid email address</span>
+</div>
+
+<div *ngIf="(controlDir && controlDir.control && controlDir.control.dirty && !controlDir.control.valid)">
+<span *ngIf="controlDir.control.errors?.['emailExists']" class="text-red-600 text-sm font-bold">Email address in use</span>
 </div>
