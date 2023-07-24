@@ -130,6 +130,8 @@ namespace API.Extensions
         {
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+
             return services;
         }
 
@@ -173,6 +175,13 @@ namespace API.Extensions
         public static IServiceCollection AddShoppingCartRepository(this IServiceCollection services)
         {
             services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
+
+            return services;
+        }
+
+        public static IServiceCollection AddOrderService(this IServiceCollection services)
+        {
+            services.AddScoped<IOrderService, OrderService>();
 
             return services;
         }
