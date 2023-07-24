@@ -15,11 +15,14 @@ namespace Infrastructure.Repository
             _context= context;
         }
 
+        public async Task AddAsync(T entity)
+        {
+            await _context.Set<T>().AddAsync(entity);
+        }
+
         public async Task AddListAsync(List<T> entities)
         {
             await _context.Set<T>().AddRangeAsync(entities);
-
-            await _context.SaveChangesAsync();
         }
 
         public async Task<IReadOnlyList<T>> GetAllAsync()
