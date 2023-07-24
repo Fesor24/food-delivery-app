@@ -1,6 +1,7 @@
 ﻿using API.Dtos;
 using AutoMapper;
 using Core.Entities;
+using Core.Entities.OrderAggregate;
 
 namespace API.Helpers
 {
@@ -22,6 +23,16 @@ namespace API.Helpers
             CreateMap<ShoppingCartItemDto, ShoppingCartItem>();
 
             CreateMap<ShoppingCartDto, ShoppingCart>();
+
+            CreateMap<AddressDto, Address>();
+
+            CreateMap<Order, OrderToReturnDto>()
+                .ForMember(x => x.DateCreated, c => c.MapFrom(x => x.DateCreated.ToString("ddd dd MMM yyyy")));
+
+            CreateMap<OrderItem, OrderItemDto>()
+                .ForMember(x => x.ProductId, c => c.MapFrom(x => x.ItemOrdered.ProductItemId))
+                .ForMember(x => x.ProductName, c => c.MapFrom(x => x.ItemOrdered.ProductName))
+                .ForMember(x => x.PictureUrl, c => c.MapFrom<OrderImageResolver>());
         }
     }
 }
