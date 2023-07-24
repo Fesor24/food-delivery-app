@@ -5,23 +5,21 @@ using AutoMapper;
 using Core.Entities;
 using Core.Interfaces;
 using Core.Specifications;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    
+
     [ApiController]
     public class RestaurantController : ControllerBase
     {
-        private readonly IGenericRepository<Restaurant> _restaurantRepo;
+        private readonly IUnitOfWork _unitOfWork;
 
         private readonly IMapper _mapper;
 
-        public RestaurantController(IGenericRepository<Restaurant> restaurantRepo, IMapper mapper)
+        public RestaurantController(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _restaurantRepo= restaurantRepo;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
@@ -30,7 +28,7 @@ namespace API.Controllers
         {
             var restaurant = _mapper.Map<List<RestaurantDto>, List<Restaurant>>(restaurantDto);
 
-            await _restaurantRepo.AddListAsync(restaurant);
+            await _unitOfWork.Repository<Restaurant>().AddListAsync(restaurant);
         }
 
         [HttpGet(Routes.FetchRestaurants)]
@@ -38,7 +36,7 @@ namespace API.Controllers
         {
             var spec = new RestaurantSpecification(sort, location);
 
-            var restaurant = await _restaurantRepo.GetAllWIthSpecAsync(spec);
+            var restaurant = await _unitOfWork.Repository<Restaurant>().GetAllWIthSpecAsync(spec);
 
             var restaurantToReturn = _mapper.Map<IReadOnlyList<Restaurant>, IReadOnlyList<RestaurantDto>>(restaurant);
 

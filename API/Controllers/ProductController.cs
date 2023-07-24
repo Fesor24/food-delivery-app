@@ -13,13 +13,13 @@ namespace API.Controllers
     [ApiController]
     public class ProductController : ControllerBase
     {
-        private readonly IGenericRepository<Products> _productRepo;
+        private readonly IUnitOfWork _unitOfWork;
 
         private readonly IMapper _mapper;
 
-        public ProductController(IGenericRepository<Products> productRepo, IMapper mapper)
+        public ProductController(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _productRepo= productRepo;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
@@ -28,7 +28,7 @@ namespace API.Controllers
         {
             var spec = new ProductByRestaurantIdSpecification(restaurantId);
 
-            var products = await _productRepo.GetAllWIthSpecAsync(spec);
+            var products = await _unitOfWork.Repository<Products>().GetAllWIthSpecAsync(spec);
 
             var productsToReturn = _mapper.Map<IReadOnlyList<Products>, IReadOnlyList<ProductDto>>(products);
 
@@ -43,7 +43,7 @@ namespace API.Controllers
         {
             var products = _mapper.Map<List<CreateProductDto>, List<Products>>(model);
 
-            await _productRepo.AddListAsync(products);
+            await _unitOfWork.Repository<Products>().AddListAsync(products);
 
             return new ApiResponse
             {
