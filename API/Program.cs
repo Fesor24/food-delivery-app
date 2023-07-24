@@ -15,7 +15,8 @@ builder.Services.AddDbContext(builder.Configuration)
     .ConfigureAuthentication(builder.Configuration)
     .ConfigureAutoMapper()
     .ConfigureCors()
-    .AddShoppingCartRepository();
+    .AddShoppingCartRepository()
+    .AddOrderService();
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
