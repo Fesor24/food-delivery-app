@@ -10,8 +10,15 @@ namespace Core.Entities.OrderAggregate
 
         public float SubTotal { get; set; }
 
+        public float DeliveryCharges { get; set; }
+
         public IReadOnlyList<OrderItem> OrderItems { get; set; }
 
         public OrderStatus Status { get; set; }
+
+        public float GetTotal()
+        {
+            return SubTotal + DeliveryCharges;
+        }
     }
 }
