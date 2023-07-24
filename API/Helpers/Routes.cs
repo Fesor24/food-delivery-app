@@ -23,5 +23,11 @@
         public const string GetCurrentUser = "api/user";
 
         public const string EmailExists = "api/email-exists";
+
+        public const string CreateOrder = "api/order";
+
+        public const string GetOrderByIdAndEmail = "api/order";
+
+        public const string GetOrdersForUser = "api/orders";
     }
 }
