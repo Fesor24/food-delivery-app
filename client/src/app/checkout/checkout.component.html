@@ -1,1 +1,53 @@
-<p>checkout works!</p>
+<div class="container mx-auto">
+  <div class="py-14">
+      <h2 class="text-4xl font-bold">Order Summary</h2>
+  <h3 class="text-3xl font-bold pt-8">Chicken Republic</h3>
+
+  <div class="flex w-full justify-between pt-5 pb-8 space-x-5">
+    <div class="flex flex-col w-3/4 space-y-3">
+    <ng-container *ngIf="(shoppingCart$ | async) as cart">
+      <ng-container *ngFor="let orderItem of cart.items">
+        <app-order-item [orderItem]="orderItem"></app-order-item>
+      </ng-container>
+
+    </ng-container>
+
+    <h3 class="text-2xl font-semibold">Delivery details</h3>
+      <form [formGroup]= "addressForm">
+
+
+        <app-text-input [label]="'First Name'" formControlName="firstName"></app-text-input>
+      <app-text-input [label]="'Last Name'" formControlName="lastName"></app-text-input>
+
+
+
+         <app-text-input [label]="'Street'" formControlName="street"></app-text-input>
+        <app-text-input [label]="'City'" formControlName="city"></app-text-input>
+
+
+
+      <app-text-input [label]="'State'" formControlName="state"></app-text-input>
+
+
+
+    </form>
+
+
+    </div>
+
+    <div class="shadow-lg rounded-lg w-[38%] px-8 py-12 h-fit">
+      <h3 class="text-3xl font-extrabold">Summary</h3>
+      <div class="bg-gray-600 h-[0.1rem] w-full mt-2"></div>
+      <div *ngIf="(shoppingCartCharges$ | async) as charges" class="flex flex-col space-y-6 mt-3">
+        <p>Products: {{charges.total | currency:' ₦'}}</p>
+        <p>Delivery: {{charges.delivery| currency: '₦'}}</p>
+        <p>Total: {{charges.total + charges.delivery | currency: '₦'}}</p>
+        <button class="btn" [disabled]="addressForm.invalid" type="submit" (click)="createOrder()">Proceed to Payment</button>
+      </div>
+    </div>
+
+
+  </div>
+  </div>
+
+</div>

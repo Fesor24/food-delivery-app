@@ -33,8 +33,9 @@
           </div>
 
           <div class="shadow-lg backdrop-blur-sm relative">
-            <h2 class="font-extrabold px-8 pt-12 text-lg">Foods available</h2>
+
             <ng-container *ngIf="products && products.length > 0">
+              <h2 class="font-extrabold px-8 pt-12 text-lg">Foods available</h2>
               <div class="grid grid-cols-2 py-10 px-8 gap-x-3 gap-y-4">
                 <ng-container *ngFor="let product of products">
                   <app-food-item [food]="product"></app-food-item>
