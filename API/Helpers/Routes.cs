@@ -6,6 +6,8 @@
 
         public const string FetchRestaurants = "api/restaurants";
 
+        public const string FetchRestaurant = "api/restaurant";
+
         public const string AddProducts = "api/products";
 
         public const string FetchProducts = "api/products";
