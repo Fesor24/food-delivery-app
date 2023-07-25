@@ -1,4 +1,5 @@
-﻿using API.Dtos;
+﻿using System.Net;
+using API.Dtos;
 using API.Helpers;
 using API.Response;
 using AutoMapper;
@@ -39,6 +40,31 @@ namespace API.Controllers
             var restaurant = await _unitOfWork.Repository<Restaurant>().GetAllWIthSpecAsync(spec);
 
             var restaurantToReturn = _mapper.Map<IReadOnlyList<Restaurant>, IReadOnlyList<RestaurantDto>>(restaurant);
+
+            return new ApiResponse
+            {
+                Result = restaurantToReturn
+            };
+        }
+
+        [HttpGet(Routes.FetchRestaurant)]
+        public async Task<ApiResponse> FetchRestaurant([FromQuery] string restaurantId)
+        {
+            var spec = new RestaurantByIdSpecification(restaurantId);
+
+            var restaurant = await _unitOfWork.Repository<Restaurant>().GetWithSpecAsync(spec);
+
+            if(restaurant is null)
+            {
+                Response.StatusCode = (int)HttpStatusCode.NotFound;
+
+                return new ApiResponse
+                {
+                    ErrorMessage = "Restaurant not found"
+                };
+            }
+
+            var restaurantToReturn = _mapper.Map<Restaurant, RestaurantDto>(restaurant);
 
             return new ApiResponse
             {
