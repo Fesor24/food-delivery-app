@@ -4,6 +4,8 @@ import { IShoppingCart, IShoppingCartItem, IShoppingCartTotals } from '../shared
 import { Observable, Subscription } from 'rxjs';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { IOrder } from '../shared/models/order';
+import { CheckoutService } from './checkout.service';
+import { IRestaurant } from '../shared/models/restaurant';
 
 @Component({
   selector: 'app-checkout',
@@ -18,6 +20,8 @@ export class CheckoutComponent implements OnInit, OnDestroy{
 
   shoppingCartCharges$! : Observable<IShoppingCartTotals | null>;
 
+  restaurant!:IRestaurant;
+
   order: IOrder = {
     cartId: '',
     address: {
@@ -31,7 +35,7 @@ export class CheckoutComponent implements OnInit, OnDestroy{
 
   addressForm!: FormGroup;
 
-  constructor(private restaurantService: RestaurantService){}
+  constructor(private restaurantService: RestaurantService, private checkoutService: CheckoutService){}
 
   ngOnDestroy(): void {
     this.shoppingCartSubscription.unsubscribe();
@@ -41,6 +45,7 @@ export class CheckoutComponent implements OnInit, OnDestroy{
     this.shoppingCart$ = this.restaurantService.shoppingCart$
     this.shoppingCartCharges$ = this.restaurantService.shoppingCartTotal$
     this.createAddressForm();
+    this.fetchRestaurant();
   }
 
   createAddressForm(){
@@ -62,8 +67,23 @@ export class CheckoutComponent implements OnInit, OnDestroy{
     })
 
     this.order.address = this.addressForm.value;
-    
+
     console.log(this.order);
+  }
+
+  fetchRestaurant(){
+    let restaurantId = "";
+    this.shoppingCartSubscription = this.shoppingCart$.subscribe((data) => {
+      if(data?.items && data.items.length > 0){
+        restaurantId = data.items[0].restaurantId;
+
+        this.checkoutService.fetchRestaurant(restaurantId).subscribe((response) => {
+          if(response){
+            this.restaurant = response
+          }
+        }, error => console.log(error));
+      }
+    })
   }
 
 }

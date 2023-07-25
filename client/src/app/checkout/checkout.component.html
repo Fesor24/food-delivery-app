@@ -1,10 +1,12 @@
 <div class="container mx-auto">
   <div class="py-14">
       <h2 class="text-4xl font-bold">Order Summary</h2>
-  <h3 class="text-3xl font-bold pt-8">Chicken Republic</h3>
+        <h3 class="text-3xl font-bold pt-8">{{restaurant.name}}</h3>
 
-  <div class="flex w-full justify-between pt-5 pb-8 space-x-5">
-    <div class="flex flex-col w-3/4 space-y-3">
+
+
+  <div class="flex w-full justify-between pt-5 space-x-5">
+    <div class="flex flex-col w-3/4 space-y-7">
     <ng-container *ngIf="(shoppingCart$ | async) as cart">
       <ng-container *ngFor="let orderItem of cart.items">
         <app-order-item [orderItem]="orderItem"></app-order-item>
@@ -40,8 +42,8 @@
       <div class="bg-gray-600 h-[0.1rem] w-full mt-2"></div>
       <div *ngIf="(shoppingCartCharges$ | async) as charges" class="flex flex-col space-y-6 mt-3">
         <p>Products: {{charges.total | currency:' ₦'}}</p>
-        <p>Delivery: {{charges.delivery| currency: '₦'}}</p>
-        <p>Total: {{charges.total + charges.delivery | currency: '₦'}}</p>
+        <p>Delivery: {{restaurant.deliveryFee | currency: '₦'}}</p>
+        <p>Total: {{charges.total + restaurant.deliveryFee | currency: '₦'}}</p>
         <button class="btn" [disabled]="addressForm.invalid" type="submit" (click)="createOrder()">Proceed to Payment</button>
       </div>
     </div>
