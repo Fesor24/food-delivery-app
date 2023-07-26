@@ -1,5 +1,6 @@
 using API.Extensions;
 using API.Middleware;
+using Application;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,7 +18,8 @@ builder.Services.AddDbContext(builder.Configuration)
     .ConfigureCors()
     .AddShoppingCartRepository()
     .AddOrderService()
-    .AddPaystackService(builder.Configuration["Paystack:Secret"]);
+    .AddPaystackService(builder.Configuration["Paystack:Secret"])
+    .AddApplicationServices();
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
