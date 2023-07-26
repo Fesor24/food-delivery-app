@@ -22,6 +22,12 @@ namespace Infrastructure.Data.Config
             builder.HasMany(x => x.OrderItems)
                 .WithOne()
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Property(x => x.PaymentStatus)
+                .HasConversion(
+                c => c.ToString(),
+                p => (PaymentStatus)Enum.Parse(typeof(PaymentStatus), p)
+               );
         }
     }
 }
