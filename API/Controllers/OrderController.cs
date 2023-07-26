@@ -6,8 +6,11 @@ using API.Response;
 using AutoMapper;
 using Core.Entities.OrderAggregate;
 using Core.Interfaces;
+using Core.Models;
+using Core.Specifications;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PayStack.Net;
 
 namespace API.Controllers
 {
@@ -16,17 +19,24 @@ namespace API.Controllers
     public class OrderController : ControllerBase
     {
         private readonly IOrderService orderService;
+
         private readonly IMapper mapper;
 
-        public OrderController(IOrderService orderService, IMapper mapper)
+        private readonly IPaymentService<TransactionInitializeResponse, TransactionVerifyResponse, object> payStack;
+
+        public OrderController(IOrderService orderService, IMapper mapper,
+            IPaymentService<TransactionInitializeResponse, TransactionVerifyResponse, object> payStack)
         {
             this.orderService = orderService;
             this.mapper = mapper;
+            this.payStack = payStack;
         }
 
         [HttpPost(Routes.CreateOrder)]
         public async Task<ApiResponse> CreateOrder([FromBody] OrderDto orderDto)
         {
+            string paystackUrl = "";
+
             var userEmail = User.GetUsersEmailFromClaimsPrincipal();
 
             var deliveryAddress = mapper.Map<AddressDto, Core.Entities.OrderAggregate.Address>(orderDto.Address);
@@ -43,11 +53,22 @@ namespace API.Controllers
                 };
             }
 
-            var orderToReturn = mapper.Map<Order, OrderToReturnDto>(order);
+            var paymentResult = await payStack.InitializeAsync(new Payment
+            {
+                Amount = order.GetTotal(),
+                Email = userEmail,
+                OrderId = order.Id,
+                CallbackUrl = orderDto.CallbackUrl
+            });
+
+            if (paymentResult.Successful)
+            {
+                paystackUrl = paymentResult.Result.Data.AuthorizationUrl;
+            }
 
             return new ApiResponse
             {
-                Result = orderToReturn
+                Result = paystackUrl
             };
         }
 
@@ -88,6 +109,20 @@ namespace API.Controllers
             return new ApiResponse
             {
                 Result = ordersToReturn
+            };
+        }
+
+        [AllowAnonymous]
+        [HttpGet(Routes.VerifyPayment)]
+        public async Task<ApiResponse> VerifyPayment([FromQuery] string trxref)
+        {
+            var order = await orderService.VerifyPayment(trxref, payStack);
+
+            var orderToReturn = mapper.Map<Order, OrderToReturnDto>(order);
+
+            return new ApiResponse
+            {
+                Result = orderToReturn
             };
         }
     }
