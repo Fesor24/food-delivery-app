@@ -18,6 +18,8 @@ namespace API.Dtos
 
         public string Status { get; set; }
 
+        public string PaymentStatus { get; set; }
+
         public float Total { get; set; }
 
         public string DateCreated { get; set; }
