@@ -45,6 +45,13 @@ namespace Infrastructure.Repository
             return await ApplySpecification(spec).FirstOrDefaultAsync();
         }
 
+        public void Update(T entity)
+        {
+            _context.Set<T>().Attach(entity);
+
+            _context.Entry(entity).State = EntityState.Modified;
+        }
+
         private IQueryable<T> ApplySpecification(ISpecification<T> spec)
         {
             return SpecificationEvaluator<T>.GetQuery(_context.Set<T>().AsQueryable(), spec);
