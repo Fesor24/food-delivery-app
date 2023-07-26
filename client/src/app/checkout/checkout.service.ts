@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../environments/environment';
 import { IOrder } from '../shared/models/order';
@@ -17,9 +17,23 @@ export class CheckoutService {
   constructor(private http: HttpClient, private router: Router) { }
 
   createOrder(order: IOrder){
-    return this.http.post<IApiResponse<object, object, object>>(this.baseUrl + 'order', order).subscribe((response) => {
+
+    const token = localStorage.getItem('token');
+
+    if(!token){
+      return;
+    }
+
+    let headers = new HttpHeaders();
+
+    headers = headers.set('Authorization', `Bearer ${token}`);
+
+    return this.http.post<IApiResponse<string, object, object>>(this.baseUrl + 'order', order, {headers})
+    .subscribe((response) => {
       if(response.successful){
-        this.router.navigateByUrl('/payment');
+        localStorage.removeItem('cart_id');
+        this.router.navigateByUrl('/');
+        window.open(response.result);
       }
     }, error => console.log(error));
   }
