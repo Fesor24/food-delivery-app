@@ -43,5 +43,7 @@ namespace Infrastructure.Data
         public DbSet<OrderItem> OrderItems { get; set; }
 
         public DbSet<Order> Orders { get; set; }
+
+        public DbSet<PaymentTransaction> PaymentTransactions { get; set; }
     }
 }
