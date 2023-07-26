@@ -1,19 +1,19 @@
-﻿using API.Helpers;
-using API.Response;
+﻿using System.Text;
+using API.Helpers;
+using Application.Response;
 using Core.Entities.Identity;
 using Core.Interfaces;
 using Infrastructure.Data;
 using Infrastructure.Identity;
 using Infrastructure.Repository;
+using Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using StackExchange.Redis;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using Infrastructure.Services;
 using PayStack.Net;
+using StackExchange.Redis;
 
 namespace API.Extensions
 {

@@ -1,6 +1,6 @@
 ﻿using System.Net;
 using System.Text.Json;
-using API.Response;
+using Application.Response;
 
 namespace API.Middleware
 {
