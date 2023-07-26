@@ -13,6 +13,7 @@ using StackExchange.Redis;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Infrastructure.Services;
+using PayStack.Net;
 
 namespace API.Extensions
 {
@@ -139,6 +140,21 @@ namespace API.Extensions
         public static IServiceCollection ConfigureAutoMapper(this IServiceCollection services)
         {
             services.AddAutoMapper(typeof(MappingProfiles));
+
+            return services;
+        }
+
+        public static IServiceCollection AddPaystackService(this IServiceCollection services, string secretKey)
+        {
+            services.AddTransient(sp => new PayStackApi(secretKey));
+
+            services.AddTransient<IPaymentService<TransactionInitializeResponse, TransactionVerifyResponse, object>, PaymentService>(
+                sp => new PaymentService(
+                    sp.GetRequiredService<PayStackApi>(),
+                    sp.GetRequiredService<IUnitOfWork>(),
+                    sp.GetRequiredService<ILogger<PaymentService>>()
+                    )
+                );
 
             return services;
         }
