@@ -1,11 +1,9 @@
-﻿using API.Dtos;
-using API.Helpers;
-using API.Response;
-using AutoMapper;
-using Core.Entities;
-using Core.Interfaces;
-using Core.Specifications;
-using Microsoft.AspNetCore.Http;
+﻿using API.Helpers;
+using Application.Dtos;
+using Application.Features.Products.Requests.Command;
+using Application.Features.Products.Requests.Queries;
+using Application.Response;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -13,42 +11,35 @@ namespace API.Controllers
     [ApiController]
     public class ProductController : ControllerBase
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMediator _mediator;
 
-        private readonly IMapper _mapper;
-
-        public ProductController(IUnitOfWork unitOfWork, IMapper mapper)
+        public ProductController(IMediator mediator)
         {
-            _unitOfWork = unitOfWork;
-            _mapper = mapper;
+            _mediator = mediator;
         }
 
         [HttpGet(Routes.FetchProducts)]
         public async Task<ApiResponse<IReadOnlyList<ProductDto>, object, object>> FetchProductsByRestaurant([FromQuery] string restaurantId)
         {
-            var spec = new ProductByRestaurantIdSpecification(restaurantId);
-
-            var products = await _unitOfWork.Repository<Products>().GetAllWIthSpecAsync(spec);
-
-            var productsToReturn = _mapper.Map<IReadOnlyList<Products>, IReadOnlyList<ProductDto>>(products);
+            var products = await _mediator.Send(new GetProductsForRestaurantRequest { RestaurantId = restaurantId });
 
             return new ApiResponse<IReadOnlyList<ProductDto>, object, object>
             {
-                Result = productsToReturn
+                Result = products
             };
         }
 
         [HttpPost(Routes.AddProducts)]
         public async Task<ApiResponse> AddProductsToRestaurant([FromBody] List<CreateProductDto> model)
         {
-            var products = _mapper.Map<List<CreateProductDto>, List<Products>>(model);
+            var response = await _mediator.Send(new CreateProductsCommand { ProductsDto = model });
 
-            await _unitOfWork.Repository<Products>().AddListAsync(products);
-
-            return new ApiResponse
+            if (response.Successful)
             {
-                Result = "Created"
-            };
+                Response.StatusCode = 201;
+            }
+
+            return response;
         }
     }
 }

@@ -1,9 +1,10 @@
-﻿using API.Dtos;
-using API.Helpers;
-using API.Response;
-using AutoMapper;
+﻿using API.Helpers;
+using Application.Dtos;
+using Application.Features.ShoppingCart.Requests.Command;
+using Application.Features.ShoppingCart.Requests.Queries;
+using Application.Response;
 using Core.Entities;
-using Core.Interfaces;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -11,20 +12,17 @@ namespace API.Controllers
     [ApiController]
     public class ShoppingCartController : ControllerBase
     {
-        private readonly IShoppingCartRepository _shoppingCartRepo;
+        private readonly IMediator _mediator;
 
-        private readonly IMapper _mapper;
-
-        public ShoppingCartController(IShoppingCartRepository shoppingCartRepo, IMapper mapper)
+        public ShoppingCartController(IMediator mediator)
         {
-            _shoppingCartRepo= shoppingCartRepo;
-            _mapper = mapper;
+            _mediator = mediator;
         }
 
         [HttpGet(Routes.GetShoppingCart)]
         public async Task<ApiResponse> GetShoppingCart([FromQuery] string shoppingCartId)
         {
-            var shopppingCart = await _shoppingCartRepo.GetShoppingCartAsync(shoppingCartId);
+            var shopppingCart = await _mediator.Send(new GetShoppingCartRequest { ShoppingCartId = shoppingCartId});
 
             return new ApiResponse
             {
@@ -35,20 +33,18 @@ namespace API.Controllers
         [HttpPost(Routes.UpdateShoppingCart)]
         public async Task<ApiResponse> UpdateShoppingCart([FromBody] ShoppingCartDto shoppingCart)
         {
-            var cartEntity = _mapper.Map<ShoppingCartDto, ShoppingCart>(shoppingCart);
-
-            var cart = await _shoppingCartRepo.UpdateShoppingCartAsync(cartEntity);
+            var cart =await _mediator.Send(new UpdateShoppingCartCommand { ShoppingCart = shoppingCart });
 
             return new ApiResponse
             {
-                Result = cart is null ? new ShoppingCart(shoppingCart.Id) : cart
+                Result = cart
             };
         }
 
         [HttpDelete(Routes.DeleteShoppingCart)]
         public async Task DeleteShoppingCart([FromQuery] string shoppingCartId)
         {
-            await _shoppingCartRepo.DeleteShoppingCartAsync(shoppingCartId);
+            await _mediator.Send(new DeleteShoppingCartCommand { ShoppingCartId = shoppingCartId});
         }
     }
 }

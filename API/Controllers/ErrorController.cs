@@ -1,5 +1,4 @@
-﻿using API.Response;
-using Microsoft.AspNetCore.Http;
+﻿using Application.Response;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers

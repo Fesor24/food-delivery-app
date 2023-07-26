@@ -1,16 +1,13 @@
 ﻿using System.Net;
-using API.Dtos;
 using API.Extensions;
 using API.Helpers;
-using API.Response;
-using AutoMapper;
-using Core.Entities.OrderAggregate;
-using Core.Interfaces;
-using Core.Models;
-using Core.Specifications;
+using Application.Dtos;
+using Application.Features.Order.Requests.Commands;
+using Application.Features.Order.Requests.Queries;
+using Application.Response;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using PayStack.Net;
 
 namespace API.Controllers
 {
@@ -18,53 +15,19 @@ namespace API.Controllers
     [Authorize]
     public class OrderController : ControllerBase
     {
-        private readonly IOrderService orderService;
+        private readonly IMediator _mediator;
 
-        private readonly IMapper mapper;
-
-        private readonly IPaymentService<TransactionInitializeResponse, TransactionVerifyResponse, object> payStack;
-
-        public OrderController(IOrderService orderService, IMapper mapper,
-            IPaymentService<TransactionInitializeResponse, TransactionVerifyResponse, object> payStack)
+        public OrderController(IMediator mediator)
         {
-            this.orderService = orderService;
-            this.mapper = mapper;
-            this.payStack = payStack;
+            _mediator = mediator;
         }
 
         [HttpPost(Routes.CreateOrder)]
         public async Task<ApiResponse> CreateOrder([FromBody] OrderDto orderDto)
         {
-            string paystackUrl = "";
-
             var userEmail = User.GetUsersEmailFromClaimsPrincipal();
 
-            var deliveryAddress = mapper.Map<AddressDto, Core.Entities.OrderAggregate.Address>(orderDto.Address);
-
-            var order = await orderService.CreateOrderAsync(userEmail, orderDto.CartId, deliveryAddress);
-
-            if(order is null)
-            {
-                Response.StatusCode = (int)HttpStatusCode.BadRequest;
-
-                return new ApiResponse
-                {
-                    ErrorMessage = "An error occurred while creating your order"
-                };
-            }
-
-            var paymentResult = await payStack.InitializeAsync(new Payment
-            {
-                Amount = order.GetTotal(),
-                Email = userEmail,
-                OrderId = order.Id,
-                CallbackUrl = orderDto.CallbackUrl
-            });
-
-            if (paymentResult.Successful)
-            {
-                paystackUrl = paymentResult.Result.Data.AuthorizationUrl;
-            }
+            string paystackUrl = await _mediator.Send(new CreateOrderCommand { Email = userEmail, Order = orderDto });
 
             return new ApiResponse
             {
@@ -77,9 +40,9 @@ namespace API.Controllers
         {
             var email = User.GetUsersEmailFromClaimsPrincipal();
 
-            var order = await orderService.GetOrderByIdAndEmailAsync(email, orderId);
+            var orderToReturn = await _mediator.Send(new GetOrderByIdAndEmailRequest { Email = email, OrderId = orderId });
 
-            if(order is null)
+            if(orderToReturn is null)
             {
                 Response.StatusCode = (int)HttpStatusCode.NotFound;
 
@@ -88,8 +51,6 @@ namespace API.Controllers
                     ErrorMessage = "Order not found"
                 };
             }
-
-            var orderToReturn = mapper.Map<Order, OrderToReturnDto>(order);
 
             return new ApiResponse
             {
@@ -102,13 +63,11 @@ namespace API.Controllers
         {
             var email = User.GetUsersEmailFromClaimsPrincipal();
 
-            var orders = await orderService.GetOrdersForUserAsync(email);
-
-            var ordersToReturn = mapper.Map<IReadOnlyList<Order>, IReadOnlyList<OrderToReturnDto>>(orders);
+            var orders = await _mediator.Send(new GetOrdersForUserRequest { Email = email });
 
             return new ApiResponse
             {
-                Result = ordersToReturn
+                Result = orders
             };
         }
 
@@ -116,13 +75,11 @@ namespace API.Controllers
         [HttpGet(Routes.VerifyPayment)]
         public async Task<ApiResponse> VerifyPayment([FromQuery] string trxref)
         {
-            var order = await orderService.VerifyPayment(trxref, payStack);
-
-            var orderToReturn = mapper.Map<Order, OrderToReturnDto>(order);
+            var order = await _mediator.Send(new VerifyPaymentCommand { Trxref = trxref });
 
             return new ApiResponse
             {
-                Result = orderToReturn
+                Result = order
             };
         }
     }

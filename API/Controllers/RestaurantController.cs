@@ -1,11 +1,10 @@
 ﻿using System.Net;
-using API.Dtos;
 using API.Helpers;
-using API.Response;
-using AutoMapper;
-using Core.Entities;
-using Core.Interfaces;
-using Core.Specifications;
+using Application.Dtos;
+using Application.Features.Restaurants.Requests.Command;
+using Application.Features.Restaurants.Requests.Queries;
+using Application.Response;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -14,45 +13,41 @@ namespace API.Controllers
     [ApiController]
     public class RestaurantController : ControllerBase
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMediator _mediator;
 
-        private readonly IMapper _mapper;
-
-        public RestaurantController(IUnitOfWork unitOfWork, IMapper mapper)
+        public RestaurantController(IMediator mediator)
         {
-            _unitOfWork = unitOfWork;
-            _mapper = mapper;
+            _mediator = mediator;
         }
 
         [HttpPost(Routes.AddRestaurants)]
-        public async Task AddRestaurants(List<RestaurantDto> restaurantDto)
+        public async Task<ApiResponse> AddRestaurants(List<RestaurantDto> restaurantDto)
         {
-            var restaurant = _mapper.Map<List<RestaurantDto>, List<Restaurant>>(restaurantDto);
+            var response = await _mediator.Send(new CreateRestaurantsCommand { RestaurantsDto = restaurantDto });
 
-            await _unitOfWork.Repository<Restaurant>().AddListAsync(restaurant);
+            if (response.Successful)
+            {
+                Response.StatusCode = 201;
+            }
+
+            return response;
         }
 
         [HttpGet(Routes.FetchRestaurants)]
         public async Task<ApiResponse> FetchRestaurants([FromQuery] string sort, [FromQuery] string location)
         {
-            var spec = new RestaurantSpecification(sort, location);
-
-            var restaurant = await _unitOfWork.Repository<Restaurant>().GetAllWIthSpecAsync(spec);
-
-            var restaurantToReturn = _mapper.Map<IReadOnlyList<Restaurant>, IReadOnlyList<RestaurantDto>>(restaurant);
+            var restuarants = await _mediator.Send(new GetRestaurantsRequest { Location = location, Sort = sort });
 
             return new ApiResponse
             {
-                Result = restaurantToReturn
+                Result = restuarants
             };
         }
 
         [HttpGet(Routes.FetchRestaurant)]
         public async Task<ApiResponse> FetchRestaurant([FromQuery] string restaurantId)
         {
-            var spec = new RestaurantByIdSpecification(restaurantId);
-
-            var restaurant = await _unitOfWork.Repository<Restaurant>().GetWithSpecAsync(spec);
+            var restaurant = await _mediator.Send(new GetRestaurantByIdRequest(restaurantId));
 
             if(restaurant is null)
             {
@@ -64,11 +59,9 @@ namespace API.Controllers
                 };
             }
 
-            var restaurantToReturn = _mapper.Map<Restaurant, RestaurantDto>(restaurant);
-
             return new ApiResponse
             {
-                Result = restaurantToReturn
+                Result = restaurant
             };
         }
     }

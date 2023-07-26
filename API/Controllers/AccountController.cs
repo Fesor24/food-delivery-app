@@ -1,13 +1,11 @@
 ﻿using System.Net;
-using System.Runtime.CompilerServices;
-using API.Dtos;
 using API.Extensions;
 using API.Helpers;
-using API.Response;
+using Application.Dtos;
+using Application.Response;
 using Core.Entities.Identity;
 using Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
