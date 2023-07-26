@@ -8,6 +8,7 @@ const routes: Routes = [
   .then(mod => mod.RestaurantModule)},
   {path: 'checkout', loadChildren: ()=> import('./checkout/checkout.module').then(mod => mod.CheckoutModule)},
   {path: 'account', loadChildren: ()=> import('./account/account.module').then(mod => mod.AccountModule)},
+  {path: 'payment', loadChildren: ()=> import('./payment/payment.module').then(mod => mod.PaymentModule)},
   {path: '**', component: HomeComponent, pathMatch: 'full'},
 ];
 
