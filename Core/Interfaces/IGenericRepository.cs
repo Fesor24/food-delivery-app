@@ -16,5 +16,7 @@ namespace Core.Interfaces
         Task AddListAsync(List<T> entities);
 
         Task AddAsync(T entity);
+
+        void Update(T entity);
     }
 }
