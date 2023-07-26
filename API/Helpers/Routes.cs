@@ -31,5 +31,7 @@
         public const string GetOrderByIdAndEmail = "api/order";
 
         public const string GetOrdersForUser = "api/orders";
+
+        public const string VerifyPayment = "api/verify-payment";
     }
 }
