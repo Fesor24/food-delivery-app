@@ -16,6 +16,8 @@ namespace Core.Entities.OrderAggregate
 
         public OrderStatus Status { get; set; }
 
+        public PaymentStatus PaymentStatus { get; set; }
+
         public float GetTotal()
         {
             return SubTotal + DeliveryCharges;
