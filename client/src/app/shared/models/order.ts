@@ -1,6 +1,7 @@
 export interface IOrder{
   cartId: string;
   address: IAddress
+  callbackUrl: string
 }
 
 export interface IAddress{
