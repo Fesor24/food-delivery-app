@@ -1,7 +1,9 @@
-﻿using Core.Entities;
+﻿using System;
+using Core.Entities;
 using Core.Entities.OrderAggregate;
 using Core.Interfaces;
 using Core.Specifications;
+using PayStack.Net;
 
 namespace Infrastructure.Services
 {
@@ -21,6 +23,11 @@ namespace Infrastructure.Services
         public async Task<Order> CreateOrderAsync(string customerEmail, string cartId, Address shippingAddress)
         {
             var cart = await shoppingCartRepo.GetShoppingCartAsync(cartId);
+
+            if(cart is null)
+            {
+                throw new Exception("Cart not found");
+            }
             
             List<OrderItem> orderItems = new List<OrderItem>();
 
@@ -76,6 +83,7 @@ namespace Infrastructure.Services
                 DeliveryAddress = shippingAddress,
                 Id = Guid.NewGuid().ToString(),
                 Status = OrderStatus.Pending,
+                PaymentStatus = PaymentStatus.Pending,
                 SubTotal = subtotal,
                 DeliveryCharges = deliveryCharges
             };
@@ -107,6 +115,45 @@ namespace Infrastructure.Services
             var orders = await unitOfWork.Repository<Order>().GetAllWIthSpecAsync(orderSpec);
 
             return orders;
+        }
+
+        public async Task<Order> VerifyPayment(string trxref, IPaymentService<TransactionInitializeResponse, TransactionVerifyResponse, object> payStack)
+        {
+            var spec = new PaymentTransactionByReferenceSpecification(trxref);
+
+            var paymentTransaction = await unitOfWork.Repository<PaymentTransaction>().GetWithSpecAsync(spec);
+
+            var orderSpec = new OrderByIdSpecification(paymentTransaction.OrderId);
+
+            var order = await unitOfWork.Repository<Order>().GetWithSpecAsync(orderSpec);
+
+            if(order.PaymentStatus is not PaymentStatus.Pending)
+            {
+                return order;
+            }
+
+            var paymentResult = await payStack.VerifyAsync(trxref);
+
+            if (paymentResult.Successful && paymentResult.Result.Status)
+            {
+                paymentTransaction.Verified = true;
+
+                order.Status = OrderStatus.Shipped;
+
+                order.PaymentStatus = PaymentStatus.Successful;              
+            }
+            else
+            {
+                order.PaymentStatus = PaymentStatus.Failed;
+            }
+
+            unitOfWork.Repository<PaymentTransaction>().Update(paymentTransaction);
+
+            unitOfWork.Repository<Order>().Update(order);
+
+            await unitOfWork.CompleteAsync();
+
+            return order;
         }
     }
 }
