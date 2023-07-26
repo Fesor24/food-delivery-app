@@ -16,7 +16,8 @@ builder.Services.AddDbContext(builder.Configuration)
     .ConfigureAutoMapper()
     .ConfigureCors()
     .AddShoppingCartRepository()
-    .AddOrderService();
+    .AddOrderService()
+    .AddPaystackService(builder.Configuration["Paystack:Secret"]);
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
