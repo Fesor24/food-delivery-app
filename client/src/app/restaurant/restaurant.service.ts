@@ -61,8 +61,14 @@ export class RestaurantService {
       )
       .pipe(
         map((response: IApiResponse<IShoppingCart, object, object>) => {
-          this.shoppingCartSource.next(response.result);
-          this.calculateShoppingCartTotals();
+          if(response.result.items.length === 0){
+            this.shoppingCartSource.next(null);
+          }
+          else{
+             this.shoppingCartSource.next(response.result);
+            this.calculateShoppingCartTotals();
+          }
+
         })
       );
   }
