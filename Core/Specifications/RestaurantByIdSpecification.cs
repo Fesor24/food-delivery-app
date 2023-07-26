@@ -6,7 +6,6 @@ namespace Core.Specifications
     {
         public RestaurantByIdSpecification(string restaurantId) : base(x =>  x.Id == restaurantId)
         {
-
         }
     }
 }
