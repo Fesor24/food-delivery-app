@@ -42,7 +42,7 @@ namespace API.Extensions
                 {
                     var logger = loggerFactory.CreateLogger<Program>();
 
-                    logger.LogError("An error occurred. Details: {error}", ex.Message);
+                    logger.LogError($"An error occurred. Details: ${ex.Message} {ex.StackTrace}");
                 }
             }
         }
